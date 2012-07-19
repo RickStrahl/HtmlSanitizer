@@ -92,7 +92,7 @@ namespace Westwind.Web.Utilities
                 {
                     if (string.IsNullOrEmpty(node.InnerText))
                     {
-                        if (node.InnerHtml.Contains("expression") || node.InnerHtml.Contains("javascript:"))
+                        if (node.InnerHtml.Contains("expression") || node.InnerHtml.Contains("javascript:") || node.InnerHtml.Contains("vbscript:"))
                             node.ParentNode.RemoveChild(node);
                     }
                 }
@@ -115,7 +115,7 @@ namespace Westwind.Web.Utilities
                         else if (
                             //(attr == "href" || attr== "src" || attr == "dynsrc" || attr == "lowsrc") &&
                                  val != null &&
-                                 val.Contains("javascript:"))
+                                 val.Contains("javascript:") || val.Contains("vbscript:"))
                             node.Attributes.Remove(currentAttribute);
 
                         // Remove CSS Expressions
