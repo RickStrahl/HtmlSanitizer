@@ -90,9 +90,10 @@ namespace Westwind.Web.Utilities
                 // remove CSS Expressions and embedded script links
                 if (node.Name == "style")
                 {
+                    var val = node.InnerHtml;
                     if (string.IsNullOrEmpty(node.InnerText))
                     {
-                        if (node.InnerHtml.Contains("expression") || node.InnerHtml.Contains("javascript:") || node.InnerHtml.Contains("vbscript:"))
+                        if (HasExpressionLinks(val) || HasScriptLinks(val) )
                             node.ParentNode.RemoveChild(node);
                     }
                 }
@@ -111,17 +112,17 @@ namespace Westwind.Web.Utilities
                         if (attr.StartsWith("on"))
                             node.Attributes.Remove(currentAttribute);
 
-                        // remove script links
-                        else if (
-                            //(attr == "href" || attr== "src" || attr == "dynsrc" || attr == "lowsrc") &&
-                                 val != null &&
-                                 val.Contains("javascript:") || val.Contains("vbscript:"))
-                            node.Attributes.Remove(currentAttribute);
-
                         // Remove CSS Expressions
                         else if (attr == "style" &&
                                  val != null &&
-                                 val.Contains("expression") || val.Contains("javascript:") || val.Contains("vbscript:"))
+                                 HasExpressionLinks(val) || HasScriptLinks(val))
+                            node.Attributes.Remove(currentAttribute);
+
+                        // remove script links from all attributes
+                        else if (
+                            //(attr == "href" || attr== "src" || attr == "dynsrc" || attr == "lowsrc") &&
+                                 val != null &&
+                                 HasScriptLinks(val) )                                 
                             node.Attributes.Remove(currentAttribute);
                     }
                 }
@@ -135,6 +136,16 @@ namespace Westwind.Web.Utilities
                     SanitizeHtmlNode(node.ChildNodes[i]);
                 }
             }
+        }
+
+        private bool HasScriptLinks(string value)
+        {
+            return value.Contains("javascript:") || value.Contains("vbscript:");
+        }
+
+        private bool HasExpressionLinks(string value)
+        {
+            return value.Contains("expression");
         }
     }
 }
