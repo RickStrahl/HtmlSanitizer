@@ -200,9 +200,15 @@ namespace HtmlSanitizerTests
             Assert.IsFalse(result.Contains("style="));
         }
 
+        [TestMethod]
+        public void ShouldNotBreakNullHtml()
+        {
+            string html = null;
 
+            string result = HtmlSanitizer.SanitizeHtml(html);
 
-
+            Assert.AreEqual(html, result);
+        }
     }
 
 

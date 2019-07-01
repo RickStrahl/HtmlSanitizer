@@ -24,9 +24,13 @@ namespace Westwind.Web.Utilities
         /// Cleans up an HTML string and removes HTML tags in blacklist
         /// </summary>
         /// <param name="html"></param>
+        /// <param name="blackList"></param>
         /// <returns></returns>
         public static string SanitizeHtml(string html, params string[] blackList)
         {
+            if (string.IsNullOrEmpty(html))
+                return html;
+
             var sanitizer = new HtmlSanitizer();
             if (blackList != null && blackList.Length > 0)
             {
@@ -46,6 +50,9 @@ namespace Westwind.Web.Utilities
         /// <returns></returns>
         public string Sanitize(string html)
         {
+            if (string.IsNullOrEmpty(html))
+                return html;
+
             var doc = new HtmlDocument();
 
             doc.LoadHtml(html);
